@@ -16,11 +16,15 @@ export class SidenaComponent implements OnInit {
     {name:"Productos", route:"product", icon: "production_quantity_limits"}
   ]
 
-  constructor(media: MediaMatcher) { 
+  constructor(media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
   }
-  ngOnInit(): void {
 
+  shouldRun = true;
+  
+  ngOnInit(): void {
+    // TODO document why this method 'ngOnInit' is empty
+  
   }
 
 }

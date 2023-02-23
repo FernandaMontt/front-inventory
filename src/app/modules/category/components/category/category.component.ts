@@ -15,7 +15,7 @@ export class CategoryComponent implements OnInit{
     this.getCategories();
   }
 
-  displayedColumns: string[] = ['id','name','description','actions'];
+  displayedColumns: string[] = ['id','name','descripcion','actions'];
   dataSource = new MatTableDataSource<CategoryElement>();
 
   getCategories(){
@@ -52,7 +52,7 @@ export class CategoryComponent implements OnInit{
 }
 
 export interface CategoryElement{
-  description: string;
+  descripcion: string;
   id: number;
   name: string;
 }

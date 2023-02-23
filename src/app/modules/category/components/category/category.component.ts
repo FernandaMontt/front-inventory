@@ -24,14 +24,14 @@ export class CategoryComponent implements OnInit{
     .subscribe( (data:any) =>{
 
       console.log("respuesta categories: ", data);
-      this.processCategoryResponse(data);
+      this.processCategoriesResponse(data);
 
     }, (error:any) => {
-      console.log("error ", error);
+      console.log("error: ", error);
     })
   }
 
-  processCategoryResponse(resp: any){
+  processCategoriesResponse(resp: any){
 
     const dataCategory: CategoryElement[] = [];
 
@@ -39,7 +39,7 @@ export class CategoryComponent implements OnInit{
 
       let listCategory = resp.categoryResponse.category;
 
-      listCategory.array.forEach((element: CategoryElement) => {
+      listCategory.forEach((element: CategoryElement) => {
         dataCategory.push(element);
       });
 

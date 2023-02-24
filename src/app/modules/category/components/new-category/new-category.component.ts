@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CategoryService } from 'src/app/modules/shared/services/category.service';
 
 @Component({
@@ -11,13 +11,23 @@ import { CategoryService } from 'src/app/modules/shared/services/category.servic
 export class NewCategoryComponent implements OnInit{
 
   public categoryForm: FormGroup;
+  estadoFormulario: string = "";
   constructor(private fb: FormBuilder, private categoryService: CategoryService,
-              private dialogRef: MatDialogRef<NewCategoryComponent>){
+              private dialogRef: MatDialogRef<NewCategoryComponent>, 
+              @Inject(MAT_DIALOG_DATA) public data: any){
+
+    console.log(data);
+    this.estadoFormulario = "Agregar";
 
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
       descripcion: ['', Validators.required]
     });
+
+    if(data != null){
+      this.updateForm(data);
+      this.estadoFormulario = "Actualizar";
+    }
   }
 
   ngOnInit(): void {
@@ -31,7 +41,17 @@ export class NewCategoryComponent implements OnInit{
       descripcion: this.categoryForm.get('descripcion')?.value
     }
 
-    this.categoryService.saveCategorie(data)
+    if(this.data != null){
+      //update
+      this.categoryService.updateCategorie(data, this.data.id)
+        .subscribe((data:any) =>{
+          this.dialogRef.close(1);
+        }, (error:any) => {
+          this.dialogRef.close(2);
+        })
+    }else {
+      //create
+      this.categoryService.saveCategorie(data)
         .subscribe((data:any) => {
           console.log(data);
           this.dialogRef.close(1);
@@ -39,10 +59,18 @@ export class NewCategoryComponent implements OnInit{
           this.dialogRef.close(2);
         })
 
+    }
   }
 
   onCancel(){
     this.dialogRef.close(3);
+  }
+
+  updateForm(data:any){
+    this.categoryForm = this.fb.group({
+      name: [data.name, Validators.required],
+      descripcion: [data.descripcion, Validators.required]
+    });
   }
 
 }

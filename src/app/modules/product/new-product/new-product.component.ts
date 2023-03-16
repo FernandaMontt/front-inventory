@@ -4,6 +4,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CategoryService } from '../../shared/services/category.service';
 import { ProductService } from '../../shared/services/product.service';
 
+
+export interface Category{
+  descripcion: string;
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
@@ -13,6 +20,10 @@ export class NewProductComponent implements OnInit{
 
   public productForm: FormGroup;
   estadoFormulario: string = "";
+  categories: Category[]=[];
+  selectedFile: any;
+  nameImg: string = "";
+
   constructor(private fb: FormBuilder, private categoryService: CategoryService,
               private productService: ProductService, private dialogRef: MatDialogRef<NewProductComponent>, 
               @Inject(MAT_DIALOG_DATA) public data: any){
@@ -28,10 +39,32 @@ export class NewProductComponent implements OnInit{
 
               }
   ngOnInit(): void {
-      
+      this.getCategories()
   }
 
   onSave(){
+    let data={
+      name: this.productForm.get('name')?.value,
+      price: this.productForm.get('price')?.value,
+      account: this.productForm.get('account')?.value,
+      category: this.productForm.get('category')?.value,
+      picture: this.selectedFile
+    }
+
+    const uploadImageData = new FormData();
+    uploadImageData.append('picture', data.picture, data.picture.name);
+    uploadImageData.append('name', data.name);
+    uploadImageData.append('price', data.price);
+    uploadImageData.append('account', data.account);
+    uploadImageData.append('categoryId', data.category);
+
+    //call the service to save a product
+    this.productService.saveProduct(uploadImageData)
+      .subscribe((data:any) => {
+          this.dialogRef.close(1);
+      },(error:any) => {
+        this.dialogRef.close(2);
+      })
 
   }
 
@@ -42,11 +75,18 @@ export class NewProductComponent implements OnInit{
   getCategories(){
     this.categoryService.getCategories()
     .subscribe( (data:any) =>{
-      console.log("respuesta categories: ", data);
+      this.categories = data.categoryResponse.category;
     }, (error:any) => {
-      console.log("error: ", error);
+      console.log("error al mostrar categorias");
     })
-    
+  }
+
+  onFileChanged(event: any){
+
+    this.selectedFile = event.target.files[0];
+    console.log(this.selectedFile);
+
+    this.nameImg = event.target.files[0].name;
   }
 
 

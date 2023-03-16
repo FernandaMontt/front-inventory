@@ -28,14 +28,14 @@ export class ConfirmComponent implements OnInit{
   delete(){
     if(this.data != null){
 
-      if(this.data.module = "category"){
+      if(this.data.module == "category"){
         this.categoryService.deleteCategorie(this.data.id)
             .subscribe((data:any) => {
               this.dialogRef.close(1);
             }, (error:any) => {
               this.dialogRef.close(2);
             })
-      }else if(this.data.module = "product"){
+      }else if(this.data.module == "product"){
         this.productService.deleteProduct(this.data.id)
             .subscribe((data:any) => {
               this.dialogRef.close(1);

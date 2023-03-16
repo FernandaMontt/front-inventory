@@ -27,4 +27,28 @@ export class ProductService {
     const endpoint = `${ base_url}/products`;
     return this.http.post(endpoint,body);
   }
+
+  /**
+   * update product
+   */
+  updateProduct(body:any, id:any){
+    const endpoint = `${ base_url}/products/${id}`;
+    return this.http.put(endpoint, body);
+  }
+
+  /**
+   * delete product
+   */
+  deleteProduct(id:any){
+    const endpoint = `${ base_url}/products/${id}`;
+    return this.http.delete(endpoint);
+  }
+
+  /**
+   * search product
+   */
+  getProductByName(name:any){
+    const endpoint = `${ base_url}/products/filter/${name}`;
+    return this.http.get(endpoint);
+  }
 }

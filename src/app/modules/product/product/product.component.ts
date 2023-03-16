@@ -43,7 +43,6 @@ export class ProductComponent implements OnInit {
       let listProduct = resp.product.products;
 
       listProduct.forEach((element: ProductElement) => {
-        //element.category = element.category.name;
         element.picture = 'data:image/jpeg;base64,'+element.picture;
         dateProduct.push(element);
       });
